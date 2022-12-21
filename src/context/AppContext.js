@@ -11,19 +11,41 @@ export const AppReducer = (state, action) => {
                     return previousExp + currentExp.cost
                 }, 0
             );
+
             total_budget = total_budget + action.payload.cost;
             action.type = "DONE";
+
             if (total_budget <= state.budget) {
                 total_budget = 0;
-                state.expenses.map((currentExp) => {
-                    if (currentExp.name === action.payload.name) {
-                        currentExp.cost = action.payload.cost + currentExp.cost;
-                    }
-                    return currentExp
-                });
+
+                let departments = state.expenses.reduce(
+                    (names, element) => {
+                        names.push(element.name)
+                        return names
+                    }, []
+                );
+
+                if (departments.includes(action.payload.name)) {
+                    state.expenses.map((currentExp) => {
+                        if (currentExp.name === action.payload.name) {
+                            currentExp.cost = action.payload.cost + currentExp.cost;
+                        }
+                        return currentExp
+                    });
+                } else {
+                    state.expenses.push({
+                        id: action.payload.name, 
+                        name: action.payload.name, 
+                        cost: action.payload.cost 
+                    })  
+                }
+
                 return {
                     ...state,
                 };
+
+                
+
             } else {
                 alert("Cannot increase the allocation! Out of funds");
                 return {
@@ -69,7 +91,7 @@ export const AppReducer = (state, action) => {
             state.currency = action.payload;
             return {
                 ...state
-            }
+            };
 
         default:
             return state;
