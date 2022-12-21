@@ -4,14 +4,17 @@ import { AppContext } from "../context/AppContext";
 const Budget = () => {
   const { budget, currency, dispatch, expenses } = useContext(AppContext);
   const totalExpenses = expenses.reduce((total, item) => {
-    return total + item.cost
-  }, 0)
+    return total + item.cost;
+  }, 0);
 
   const checkBudget = (event) => {
     if (event.target.value <= totalExpenses) {
-      alert("You cannot reduce the bugdet value lower than the spending")
+      alert("You cannot reduce the bugdet value lower than the spending");
     }
-  }
+    if (event.target.value >= 20000) {
+      alert("The value cannot exceed 20000");
+    }
+  };
 
   return (
     <div className="alert alert-dark">
@@ -26,7 +29,9 @@ const Budget = () => {
           max="20000"
           min={totalExpenses}
           step="10"
-          onChange={event => dispatch({type: "SET_BUDGET", payload: event.target.value})}
+          onChange={(event) =>
+            dispatch({ type: "SET_BUDGET", payload: event.target.value })
+          }
           onClick={checkBudget}
           style={{
             maxWidth: "150px",
@@ -34,7 +39,7 @@ const Budget = () => {
             border: "hidden",
             borderRadius: "5px",
             padding: "0",
-            paddingLeft: "10px"
+            paddingLeft: "10px",
           }}
         ></input>
       </span>
